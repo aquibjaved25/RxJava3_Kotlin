@@ -12,18 +12,18 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var myObservable: Observable<String>
-    private lateinit var myObserver: DisposableObserver<String>
+    private lateinit var myObservable: Observable<Int>
+    private lateinit var myObserver: DisposableObserver<Int>
 
     private var compositeDisposable:CompositeDisposable  = CompositeDisposable()
     //private var greeting: Array<String> = arrayOf ( "Hello A","Hello B","Hello C" )
-    private var greetings: Array<String> =
-        arrayOf("Hello A", "Hello B", "Hello C")
+    private var greetings: Array<Int> =
+        arrayOf(1,2,3,4,5)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        myObservable = Observable.fromArray(*greetings)
+        myObservable = Observable.range(1,20)
        // myObservable = Observable.fromArray(  "Hello A","Hello B","Hello C"  )
 
         compositeDisposable.add(
@@ -34,10 +34,10 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun getObserver():DisposableObserver <String> {
+    private fun getObserver():DisposableObserver <Int> {
 
-        myObserver = object : DisposableObserver<String> () {
-            override fun onNext(t: String) {
+        myObserver = object : DisposableObserver<Int> () {
+            override fun onNext(t: Int) {
                 Log.d("RxJava", "onNext Invoked $t")
             }
 
