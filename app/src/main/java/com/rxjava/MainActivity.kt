@@ -5,11 +5,10 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.ObservableEmitter
-import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,6 +34,18 @@ class MainActivity : AppCompatActivity() {
             myObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                /*.map { student ->
+                    student.name = (student.name.uppercase(Locale.ROOT))
+                    student
+            }*/
+                .flatMap { student: Student ->
+
+                    val student1 = Student(student.name, "", 1, "")
+                    val student2 = Student(student.name, "", 2, "")
+
+                    student.name = (student.name.uppercase(Locale.ROOT))
+                    Observable.just<Student>(student,student1,student2)
+                }
                 .subscribeWith(getObserver())
         )
     }
@@ -43,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         myObserver = object : DisposableObserver<Student>() {
             override fun onNext(t: Student) {
-                Log.d("RxJava", "onNext Invoked ${t.email}")
+                Log.d("RxJava", "onNext Invoked ${t.name}")
             }
 
             override fun onError(e: Throwable) {
